@@ -13,6 +13,7 @@ public class GetSlotItem : MonoBehaviour
         {
             InSlotName = collision.GetComponent<SlotItem>().GetName();
             GetSlot();
+            GameManager.Instance.isSpin = false;
             StartCoroutine(GameManager.Instance.WaitForCheckWin());
         }
     }

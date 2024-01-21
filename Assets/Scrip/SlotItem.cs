@@ -6,11 +6,6 @@ public class SlotItem : MonoBehaviour
 {
     public string SlotName;
     public bool isOnSlot = false;
-    private RectTransform RT;
-    private void Start()
-    {
-        RT = GetComponent<RectTransform>();
-    }
     public string GetName()
     {
         return SlotName;
@@ -21,5 +16,6 @@ public class SlotItem : MonoBehaviour
         {
             isOnSlot = true;
         }
+        
     }
 }
