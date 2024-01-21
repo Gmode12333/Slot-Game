@@ -13,7 +13,14 @@ public class PopupText : MonoBehaviour
     }
     public void SetText(int amount)
     {
-        TextPopup.text = "+" + amount.ToString();
+        if(amount > 0)
+        {
+            TextPopup.text = "+" + amount.ToString();
+        }
+        if(amount < 0)
+        {
+            TextPopup.text = amount.ToString();
+        }
     }
     public void DestroyObject()
     {

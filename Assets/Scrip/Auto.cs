@@ -5,7 +5,8 @@ using UnityEngine.UIElements;
 
 public class Auto : MonoBehaviour
 {
-    private float _spinSpeed = 10f;
+    private float _spinTime = 10f;
+    private float _spinSpeed = 0.1f;
     private RectTransform RT;
     public int _itemAmount = 20;
     public ScrollLine scrollLine;
@@ -17,14 +18,15 @@ public class Auto : MonoBehaviour
     {
         //Atact this Script to Content in Scroll View To make it Infinite Loop View
         RT = GetComponent<RectTransform>();
-        _spinSpeed = GameManager.Instance.SpinTime;
+        _spinTime = GameManager.Instance.SpinTime;
+        _spinSpeed = GameManager.Instance.SpinSpeed;
         GameManager.Instance.GetRandomItemSlot(RT, _itemAmount);
         child = RT.GetComponentsInChildren<Transform>();
         GetStopTime();
     }
     public void OnSpin()
     {
-        StartCoroutine(Spinning(_spinSpeed));
+        StartCoroutine(Spinning(_spinTime));
     }
     public void GetStopTime()
     {
@@ -43,22 +45,22 @@ public class Auto : MonoBehaviour
                 _speedLose = 0.04f;
                 break;
             case ScrollLine.Line5:
-                _speedLose = 0.02f;
+                _speedLose = 0.035f;
                 break;
         }
     }
-    IEnumerator Spinning(float speed)
+    IEnumerator Spinning(float time)
     {
         float height = RT.rect.height - 200;
         while (!isFinish)
         {
             yield return new WaitForSeconds(0.0001f);
-            RT.transform.localPosition = new Vector3(RT.transform.localPosition.x, RT.transform.localPosition.y - speed, RT.transform.localPosition.z);
-            speed -= _speedLose;
+            RT.transform.localPosition = new Vector3(RT.transform.localPosition.x, RT.transform.localPosition.y - time * _spinSpeed, RT.transform.localPosition.z);
+            time -= _speedLose;
             GameManager.Instance.isSpin = true;
             GameManager.Instance.HasChecked = false;
             GameManager.Instance.CanSpin = false;
-            if (speed <= 0)
+            if (time <= 0)
             {
                 isFinish = true;
             }

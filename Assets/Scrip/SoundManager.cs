@@ -34,6 +34,10 @@ public class SoundManager : GlobalReference<SoundManager>
             }
         }
     }
+    public void StopSound()
+    {
+        SoundSource.Stop();
+    }
 }
 [Serializable]
 public class GetAudioTag

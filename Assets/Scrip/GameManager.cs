@@ -49,6 +49,8 @@ public class GameManager : GlobalReference<GameManager>
     [Range(10f, 20f)]
     // Start Spin Speed && Spin Time
     public float SpinTime = 0.1f;
+    [Range(1f, 10f)]
+    public float SpinSpeed = 1f;
     // Stack Win Num
     public int WinNum;
     public int MinBet;
@@ -56,8 +58,10 @@ public class GameManager : GlobalReference<GameManager>
     public int betAmount = 100;
     [Header("Debug Checking Slot && HasCheck Win Slot")]
     public bool HasChecked;
+    public CheckBox Checkbox;
     public string A1, A2, A3, B1, B2, B3, C1, C2, C3, D1, D2, D3, E1, E2, E3;
     public bool A1b, A2b, A3b, B1b, B2b, B3b, C1b, C2b, C3b, D1b, D2b, D3b, E1b, E2b, E3b;
+    public int PayLine;
     void Start()
     {
         //Load Data
@@ -146,6 +150,7 @@ public class GameManager : GlobalReference<GameManager>
         {
             return;
         }
+        SoundManager.Instance.StopSound();
         BetMoney();
         SetDefaultBool();
         isBeginSpawn = false;
@@ -159,22 +164,30 @@ public class GameManager : GlobalReference<GameManager>
         Spin4.OnSpin();
         Spin5.OnSpin();
         SoundManager.Instance.PlaySound("Spin");
+        SoundManager.Instance.PlaySound("OnSpin");
         SaveUserData();
     }
     public void CheckWin()
     {
         //Check All Slot Position
+        CheckFiveLine();
         CheckThreeLine();
         CheckFourLine();
-        CheckFiveLine();
         CanSpin = true;
         HasChecked = true;
         if (WinNum > 0)
         {
             AddGold(WinNum);
+            PayLine = WinNum;
             WinNum = 0;
             SaveUserData();
             SoundManager.Instance.PlaySound("Win");
+        }
+        else
+        {
+            var text = Instantiate(PopupText, PopupTextSpawn);
+            text.GetComponent<PopupText>().amount = -betAmount;
+            SoundManager.Instance.PlaySound("Click");
         }
     }
     public void CheckThreeLine()

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CheckBox : MonoBehaviour
@@ -8,24 +9,34 @@ public class CheckBox : MonoBehaviour
     public string A1, A2, A3, B1, B2, B3, C1, C2, C3, D1, D2, D3, E1, E2, E3;
     public GameObject A1Obj, A2Obj, A3Obj, B1Obj, B2Obj, B3Obj, C1Obj, C2Obj, C3Obj, D1Obj, D2Obj, D3Obj, E1Obj, E2Obj, E3Obj;
     public bool isFinish = false;
-    private void Update()
+    public int WinLine = 0;
+    private void Start()
     {
-        if (!GameManager.Instance.isSpin && GameManager.Instance.CanSpin)
+        StartCoroutine(CheckWinSlot());
+    }
+    public IEnumerator CheckWinSlot()
+    {
+        while (true)
         {
-            foreach (GameObject item in CheckBoxList)
+            yield return new WaitForSeconds(0.1f);
+            if(GameManager.Instance.CanSpin && !GameManager.Instance.isSpin)
             {
-                item.SetActive(true);
-                if (GameManager.Instance.HasChecked)
+                foreach (var item in CheckBoxList)
                 {
-                    CheckWin();
+                    item.SetActive(true);
+                    if (GameManager.Instance.HasChecked)
+                    {
+                       CheckWin();
+                    }
                 }
             }
-        }else
-        {
-            SetDefaultFrame();
-            foreach (GameObject item in CheckBoxList)
+            else
             {
-                item.SetActive(false);
+                SetDefaultFrame();
+                foreach (var item in CheckBoxList)
+                {
+                    item.SetActive(false);
+                }
             }
         }
     }
@@ -46,9 +57,10 @@ public class CheckBox : MonoBehaviour
         E1 = GameManager.Instance.E1;
         E2 = GameManager.Instance.E2;
         E3 = GameManager.Instance.E3;
-        CheckThreeLine();
-        CheckFourLine();
+        WinLine = GameManager.Instance.PayLine;
         CheckFiveLine();
+        CheckFourLine();
+        CheckThreeLine();
     }
     public void CheckThreeLine()
     {
